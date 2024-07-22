@@ -1,0 +1,13 @@
+flask
+pandas
+rich
+bs4
+emoji
+torch
+transformers
+numpy
+sklearn
+faiss
+langchain_core
+langchain_groq
+langchain
