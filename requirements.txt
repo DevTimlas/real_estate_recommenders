@@ -6,7 +6,7 @@ emoji
 torch
 transformers
 numpy
-sklearn
+scikit-learn
 faiss
 langchain_core
 langchain_groq
