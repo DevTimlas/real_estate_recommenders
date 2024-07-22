@@ -7,7 +7,7 @@ torch
 transformers
 numpy
 scikit-learn
-faiss
+faiss-cpu
 langchain_core
 langchain_groq
 langchain
