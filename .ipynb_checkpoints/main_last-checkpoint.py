@@ -144,7 +144,7 @@ def searchFAISSIndex(data, query, index, nprobe, tokenizer, model, topk=20):
     dat['bedrooms_numeric'] = dat['bedrooms'].str.extract('(\d+)', expand=False).astype(float)
 
     # Sort by is_lavington first, then by is_rent, then by location, and finally by submission type
-    dat = dat.sort_values(by=[f"is_{query['location'].lower()}", 'is_rent', f"is_{query['bedroom'].lower()}", 'location', 'submission_type', 'bedrooms_numeric'], 
+    dat = dat.sort_values(by=[f"is_{query['location'].lower()}", f"is_{query['sub_type'].lower()}", f"is_{query['bedroom'].lower()}", 'location', 'submission_type', 'bedrooms_numeric'], 
                           ascending=[False, False, False, True, True, True])
 
     
