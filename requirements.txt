@@ -11,3 +11,4 @@ faiss-cpu
 langchain_core
 langchain_groq
 langchain
+langchain_openai
