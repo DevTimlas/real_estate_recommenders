@@ -80,6 +80,8 @@ def get_q(msg):
     user may mention mansion as property type, just return maisonette.
     users may just want to search by a single keyword, make sure you're not returning empty dictionary, and find patterns to what maps.
     they may input just ace, realtors, haaften, nyathore, sam, peris and so on... those are still agent names
+    as for the price, user might mention something like 100K or 1m or 30K or 1b or fifty or hundred ... you should convert those to 0s... 50K = 50,000, 1m = 1,000,000 and so on.
+
     """
     prompt = ChatPromptTemplate.from_messages([SystemMessagePromptTemplate.from_template(sys_prompt),
                                                MessagesPlaceholder(variable_name="get_bed"),
