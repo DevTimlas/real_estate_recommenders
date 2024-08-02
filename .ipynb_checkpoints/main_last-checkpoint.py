@@ -193,7 +193,7 @@ def searchFAISSIndex(data, query, index, nprobe, tokenizer, model, topk=20):
 
     if ref_lat is not None and ref_lon is not None:
         dat['distance'] = haversine(ref_lon, ref_lat, dat['lon'], dat['lat'])
-        dat = dat[dat['distance'] <= 5]
+        dat = dat[dat['distance'] <= 50]
     else:
         dat['distance'] = np.nan
 
@@ -226,6 +226,9 @@ def searchFAISSIndex(data, query, index, nprobe, tokenizer, model, topk=20):
 
     sort_criteria.extend(['agent.name', 'location', 'submission_type', 'property_type', 'bedrooms_numeric', 'distance'])
     sort_ascending.extend([True, True, True, True, True, True])
+
+    sort_criteria.extend(['distance'])
+    sort_ascending.extend([True])
 
     dat = dat.sort_values(by=sort_criteria, ascending=sort_ascending)
         
