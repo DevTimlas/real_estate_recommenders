@@ -193,6 +193,7 @@ def searchFAISSIndex(data, query, index, nprobe, tokenizer, model, topk=20):
 
     if ref_lat is not None and ref_lon is not None:
         dat['distance'] = haversine(ref_lon, ref_lat, dat['lon'], dat['lat'])
+        dat = dat[dat['distance'] <= 5]
     else:
         dat['distance'] = np.nan
 
