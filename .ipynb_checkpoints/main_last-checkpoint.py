@@ -81,7 +81,10 @@ def get_q(msg):
     users may just want to search by a single keyword, make sure you're not returning empty dictionary, and find patterns to what maps.
     they may input just ace, realtors, haaften, nyathore, sam, peris and so on... those are still agent names
     as for the price, user might mention something like 100K or 1m or 30K or 1b or fifty or hundred ... you should convert those to 0s... 50K = 50,000, 1m = 1,000,000 and so on.
-
+    also we need to map the belows as well:
+    if user mentions with gated community, map gated_commumity to Yes, and No otherwise, and if they specify none, just map to unknown.
+    if user mentions owned or own compound , map own_compound to Yes, and No otherwise, and if they specify none, just map to unknown.
+    if user searches something similar to landlord, then map submitted_by to owner, otherwise agent if they specify agent, and if they specify none, just map to unknown
     """
     prompt = ChatPromptTemplate.from_messages([SystemMessagePromptTemplate.from_template(sys_prompt),
                                                MessagesPlaceholder(variable_name="get_bed"),
@@ -193,23 +196,38 @@ def searchFAISSIndex(data, query, index, nprobe, tokenizer, model, topk=20):
     else:
         dat['distance'] = np.nan
 
-    dat = dat.sort_values(
-        by=[
-            f"is_{query['location'].lower()}", 
-            f"is_{query['agent'].lower()}", 
-            f"is_{query['sub_type'].lower()}", 
-            f"is_{query['bedroom'].lower()}", 
-            f"is_{query['property'].lower()}",
-            'agent.name', 
-            'location', 
-            'submission_type', 
-            'property_type', 
-            'bedrooms_numeric', 
-            'distance'
-        ], 
-        ascending=[False, False, False, False, False, True, True, True, True, True, True]
-    )
-    
+    sort_criteria = [
+        f"is_{query['location'].lower()}", 
+        f"is_{query['agent'].lower()}", 
+        f"is_{query['sub_type'].lower()}", 
+        f"is_{query['bedroom'].lower()}", 
+        f"is_{query['property'].lower()}"
+    ]
+    sort_ascending = [False, False, False, False, False]
+
+    if query.get('gated_community', '').lower() == 'yes':
+        dat['is_gated'] = dat['gated_community'].str.lower() == 'yes'
+        sort_criteria.append('is_gated')
+        sort_ascending.append(False)
+
+    if query.get('own_compound', '').lower() == 'yes':
+        dat['is_own_compound'] = dat['own_compound'].str.lower() == 'yes'
+        sort_criteria.append('is_own_compound')
+        sort_ascending.append(False)
+    if query.get('submitted_by', '').lower() == 'agent':
+        dat['is_submitted_by'] = dat['submitted_by'].str.lower() == 'agent'
+        sort_criteria.append('is_submitted_by')
+        sort_ascending.append(False)
+    if query.get('submitted_by', '').lower() == 'owner':
+        dat['is_submitted_by'] = dat['submitted_by'].str.lower() == 'agent'
+        sort_criteria.append('is_submitted_by')
+        sort_ascending.append(False)
+
+    sort_criteria.extend(['agent.name', 'location', 'submission_type', 'property_type', 'bedrooms_numeric', 'distance'])
+    sort_ascending.extend([True, True, True, True, True, True])
+
+    dat = dat.sort_values(by=sort_criteria, ascending=sort_ascending)
+        
     return dat
 
 
