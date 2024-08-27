@@ -35,7 +35,7 @@ model = AutoModel.from_pretrained('cross-encoder/ms-marco-TinyBERT-L-2-v2', cach
 
 def get_q(msg):
     llm = ChatOpenAI(temperature=0, model='gpt-4-turbo-2024-04-09',
-                       api_key="sk-proj-pHkywA2mDUiHGcCWRM4TT3BlbkFJz3qlbeGgfG8C70iHX7WK")
+                       api_key="")
     memory = ConversationBufferMemory(memory_key="get_bed", return_messages=True)
     sys_prompt = f"""The user says: "{msg}", Just incase the text is long and not straightforward, Look for the main 
     information in the user's input and extract it. main information is the number of bedrooms, so, anything the user type
